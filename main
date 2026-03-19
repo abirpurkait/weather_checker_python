@@ -1,0 +1,24 @@
+import requests
+class get_temp:
+    def __init__(self,lat,long):
+        self.lat=lat
+        self.long=long
+    def display(self):
+        weather_url = f"https://api.open-meteo.com/v1/forecast?latitude={self.lat}&longitude={self.long}&current_weather=true"
+        weather_data=requests.get(weather_url).json()
+        temp=weather_data['current_weather']['temperature']
+        wind=weather_data['current_weather']['windspeed']
+        print(f"Current temperature is {temp}°C and wind speed is {wind}km/h")
+while True:
+    city=input("Please enter a city name :> ")
+    city_url=f"https://geocoding-api.open-meteo.com/v1/search?name={city}"
+    city_data=requests.get(city_url).json()
+    chk=city_data.get('results','NA')
+    if chk !="NA":
+        lat=city_data['results'][0]["latitude"]
+        long=city_data['results'][0]["longitude"]
+        data=get_temp(lat,long)
+        data.display()
+        break
+    else:
+        print("Please enter valid city name. Try again!")
